@@ -6,5 +6,130 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+	
+	<ItemGroup>
+	  <PackageReference Include="Indigo.Net" Version="1.20.0" />
+	  <PackageReference Include="RDKitDotNetCore" Version="2024.6.5" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <ProjectReference Include="..\CCSPredict.Core\CCSPredict.Core.csproj" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <Folder Include="Libraries\" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Update="C:\Users\chris\.nuget\packages\rdkitdotnetcore\2024.6.5\build\\..\runtimes\win10-x64\native\freetype.dll" Link="Libraries\freetype.dll" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Update="C:\Users\chris\.nuget\packages\rdkitdotnetcore\2024.6.5\build\\..\runtimes\win10-x64\native\api-ms-win-crt-filesystem-l1-1-0.dll" Link="Libraries\api-ms-win-crt-filesystem-l1-1-0.dll" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Update="C:\Users\chris\.nuget\packages\rdkitdotnetcore\2024.6.5\build\\..\runtimes\ubuntu.22.04-x64\native\libboost_serialization.so.1.84.0" Link="Libraries\libboost_serialization.so.1.84.0" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Update="C:\Users\chris\.nuget\packages\rdkitdotnetcore\2024.6.5\build\\..\runtimes\win10-x64\native\api-ms-win-crt-math-l1-1-0.dll" Link="Libraries\api-ms-win-crt-math-l1-1-0.dll" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Update="C:\Users\chris\.nuget\packages\rdkitdotnetcore\2024.6.5\build\\..\runtimes\win10-x64\native\api-ms-win-crt-time-l1-1-0.dll" Link="Libraries\api-ms-win-crt-time-l1-1-0.dll" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Update="C:\Users\chris\.nuget\packages\rdkitdotnetcore\2024.6.5\build\\..\runtimes\win10-x64\native\api-ms-win-crt-utility-l1-1-0.dll" Link="Libraries\api-ms-win-crt-utility-l1-1-0.dll" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Update="C:\Users\chris\.nuget\packages\rdkitdotnetcore\2024.6.5\build\\..\runtimes\win10-x64\native\api-ms-win-crt-runtime-l1-1-0.dll" Link="Libraries\api-ms-win-crt-runtime-l1-1-0.dll" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Update="C:\Users\chris\.nuget\packages\rdkitdotnetcore\2024.6.5\build\\..\runtimes\win10-x64\native\api-ms-win-crt-stdio-l1-1-0.dll" Link="Libraries\api-ms-win-crt-stdio-l1-1-0.dll" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Update="C:\Users\chris\.nuget\packages\rdkitdotnetcore\2024.6.5\build\\..\runtimes\win10-x64\native\api-ms-win-crt-convert-l1-1-0.dll" Link="Libraries\api-ms-win-crt-convert-l1-1-0.dll" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Update="C:\Users\chris\.nuget\packages\rdkitdotnetcore\2024.6.5\build\\..\runtimes\win10-x64\native\api-ms-win-crt-environment-l1-1-0.dll" Link="Libraries\api-ms-win-crt-environment-l1-1-0.dll" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Update="C:\Users\chris\.nuget\packages\rdkitdotnetcore\2024.6.5\build\\..\runtimes\ubuntu.22.04-x64\native\RDKFuncs.so" Link="Libraries\RDKFuncs.so" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Update="C:\Users\chris\.nuget\packages\rdkitdotnetcore\2024.6.5\build\\..\runtimes\win10-x64\native\api-ms-win-crt-string-l1-1-0.dll" Link="Libraries\api-ms-win-crt-string-l1-1-0.dll" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Update="C:\Users\chris\.nuget\packages\rdkitdotnetcore\2024.6.5\build\\..\runtimes\win10-x64\native\api-ms-win-crt-locale-l1-1-0.dll" Link="Libraries\api-ms-win-crt-locale-l1-1-0.dll" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Update="C:\Users\chris\.nuget\packages\rdkitdotnetcore\2024.6.5\build\\..\runtimes\win10-x64\native\boost_iostreams-vc140-mt-x64-1_67.dll" Link="Libraries\boost_iostreams-vc140-mt-x64-1_67.dll" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Update="C:\Users\chris\.nuget\packages\rdkitdotnetcore\2024.6.5\build\\..\runtimes\ubuntu.22.04-x64\native\libboost_iostreams.so.1.84.0" Link="Libraries\libboost_iostreams.so.1.84.0" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Update="C:\Users\chris\.nuget\packages\rdkitdotnetcore\2024.6.5\build\\..\runtimes\win10-x64\native\zlib.dll" Link="Libraries\zlib.dll" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Update="C:\Users\chris\.nuget\packages\rdkitdotnetcore\2024.6.5\build\\..\runtimes\win10-x64\native\api-ms-win-crt-heap-l1-1-0.dll" Link="Libraries\api-ms-win-crt-heap-l1-1-0.dll" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Update="C:\Users\chris\.nuget\packages\rdkitdotnetcore\2024.6.5\build\\..\runtimes\win10-x64\native\msvcp140.dll" Link="Libraries\msvcp140.dll" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Update="C:\Users\chris\.nuget\packages\rdkitdotnetcore\2024.6.5\build\\..\runtimes\win10-x64\native\libexpat.dll" Link="Libraries\libexpat.dll" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Update="C:\Users\chris\.nuget\packages\rdkitdotnetcore\2024.6.5\build\\..\runtimes\win10-x64\native\vcruntime140.dll" Link="Libraries\vcruntime140.dll" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Update="C:\Users\chris\.nuget\packages\rdkitdotnetcore\2024.6.5\build\\..\runtimes\win10-x64\native\api-ms-win-crt-multibyte-l1-1-0.dll" Link="Libraries\api-ms-win-crt-multibyte-l1-1-0.dll" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Update="C:\Users\chris\.nuget\packages\rdkitdotnetcore\2024.6.5\build\\..\runtimes\win10-x64\native\fontconfig-1.dll" Link="Libraries\fontconfig-1.dll" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Update="C:\Users\chris\.nuget\packages\rdkitdotnetcore\2024.6.5\build\\..\runtimes\win10-x64\native\RDKFuncs.dll" Link="Libraries\RDKFuncs.dll" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Update="C:\Users\chris\.nuget\packages\rdkitdotnetcore\2024.6.5\build\\..\runtimes\win10-x64\native\boost_serialization-vc140-mt-x64-1_67.dll" Link="Libraries\boost_serialization-vc140-mt-x64-1_67.dll" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Update="C:\Users\chris\.nuget\packages\rdkitdotnetcore\2024.6.5\build\\..\runtimes\win10-x64\native\libpng16.dll" Link="Libraries\libpng16.dll" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Update="C:\Users\chris\.nuget\packages\rdkitdotnetcore\2024.6.5\build\\..\runtimes\win10-x64\native\cairo.dll" Link="Libraries\cairo.dll" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Update="C:\Users\chris\.nuget\packages\rdkitdotnetcore\2024.6.5\build\\..\runtimes\win10-x64\native\vcruntime140_1.dll" Link="Libraries\vcruntime140_1.dll" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Update="C:\Users\chris\.nuget\packages\rdkitdotnetcore\2024.6.5\build\\..\runtimes\win10-x64\native\boost_regex-vc140-mt-x64-1_67.dll" Link="Libraries\boost_regex-vc140-mt-x64-1_67.dll" />
+	</ItemGroup>
 
 </Project>

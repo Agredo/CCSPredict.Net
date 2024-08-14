@@ -7,4 +7,14 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+	<ItemGroup>
+	  <PackageReference Include="Microsoft.ML" Version="3.0.1" />
+	  <PackageReference Include="Microsoft.ML.FastTree" Version="3.0.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\CCSPredict.Data\CCSPredict.Data.csproj" />
+	  <ProjectReference Include="..\CCSPredict.Descriptors\CCSPredict.Descriptors.csproj" />
+	</ItemGroup>
+
 </Project>
