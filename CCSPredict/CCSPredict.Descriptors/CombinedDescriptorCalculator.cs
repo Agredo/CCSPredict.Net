@@ -15,7 +15,7 @@ public class CombinedDescriptorCalculator : IMoleculeDescriptorCalculator
                 new GeometricDescriptorCalculator(),
                 //new ElectronicDescriptorCalculator(),
                 new PhysicochemicalDescriptorCalculator(),
-                //new FingerprintCalculator()
+                new FingerprintCalculator()
             };
     }
 

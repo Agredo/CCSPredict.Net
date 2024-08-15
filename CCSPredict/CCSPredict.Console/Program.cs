@@ -15,6 +15,11 @@ while (true)
     if (smiles.ToLower() == "exit") break;
 
     var prediction = await predictor.PredictCcsAsync(smiles);
-    Console.WriteLine($"Predicted CCS: {prediction.PredictedCcs.Value} {prediction.PredictedCcs.Unit}");
+    var svmPrediction = await predictor.PredictCcsSVMAsync(smiles);
+    var randomForestPrediction = await predictor.PredictCcsRandomForestAsync(smiles);
+
+    Console.WriteLine($"Predicted CCS (FastTreeTweedie): {prediction.PredictedCcs.Value} {prediction.PredictedCcs.Unit}");
+    Console.WriteLine($"Predicted CCS (SVM): {svmPrediction.PredictedCcs.Value} {svmPrediction.PredictedCcs.Unit}");
+    Console.WriteLine($"Predicted CCS (Random Forest): {randomForestPrediction.PredictedCcs.Value} {randomForestPrediction.PredictedCcs.Unit}");
     Console.WriteLine($"Confidence: {prediction.Confidence}");
 }
