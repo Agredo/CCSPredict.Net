@@ -17,14 +17,14 @@ public class FingerprintCalculator : IMoleculeDescriptorCalculator
             "IndigoFingerprint"
         };
 
-    public async Task<Dictionary<string, double>> CalculateDescriptorsAsync(Molecule molecule)
+    public async Task<Dictionary<string, float>> CalculateDescriptorsAsync(Molecule molecule)
     {
         return await Task.Run(() =>
         {
             var rdkitMol = RWMol.MolFromSmiles(molecule.Smiles);
             var indigoMol = indigo.loadMolecule(molecule.Smiles);
 
-            var descriptors = new Dictionary<string, double>();
+            var descriptors = new Dictionary<string, float>();
 
             // Morgan (ECFP) Fingerprint
             var morganFp = RDKFuncs.getMorganFingerprintAsBitVect(rdkitMol, 2, 2048);
@@ -46,22 +46,22 @@ public class FingerprintCalculator : IMoleculeDescriptorCalculator
         });
     }
 
-    private double BitVectToDouble(ExplicitBitVect bv)
+    private float BitVectToDouble(ExplicitBitVect bv)
     {
-        return (double)bv.getNumOnBits() / bv.getNumBits();
+        return bv.getNumOnBits() / bv.getNumBits();
     }
 
-    private double SparseIntVectToDouble(SparseIntVect32 siv)
+    private float SparseIntVectToDouble(SparseIntVect32 siv)
     {
-        return siv.getNonzero().Count / (double)siv.getLength();
+        return siv.getNonzero().Count / siv.getLength();
     }
-    private double SparseIntVectToDouble(SparseIntVect64 siv)
+    private float SparseIntVectToDouble(SparseIntVect64 siv)
     {
-        return siv.getNonzero().Count / (double)siv.getLength();
+        return siv.getNonzero().Count / siv.getLength();
     }
 
-    private double FingerprintToDouble(IndigoObject fp)
+    private float FingerprintToDouble(IndigoObject fp)
     {
-        return fp.countBits() / (double)fp.toString().Length;
+        return fp.countBits() / fp.toString().Length;
     }
 }

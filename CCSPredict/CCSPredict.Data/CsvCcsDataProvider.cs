@@ -30,7 +30,12 @@ public class CsvCcsDataProvider : ICcsDataProvider
     private async Task<IEnumerable<MoleculeWithCcs>> ReadCsvFileAsync(string filePath)
     {
         using var reader = new StreamReader(filePath);
-        using var csv = new CsvReader(reader, new CsvConfiguration(CultureInfo.InvariantCulture));
+        using var csv = new CsvReader(reader, new CsvConfiguration(CultureInfo.InvariantCulture)
+        {
+            Delimiter = ";",
+            HeaderValidated = null,
+            MissingFieldFound = null
+        });
 
         var records = new List<MoleculeWithCcs>();
         await foreach (var record in csv.GetRecordsAsync<MoleculeWithCcs>())

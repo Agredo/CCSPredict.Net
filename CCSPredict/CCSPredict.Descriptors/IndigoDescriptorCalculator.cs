@@ -6,8 +6,7 @@ namespace CCSPredict.Descriptors;
 
 public class IndigoDescriptorCalculator : IMoleculeDescriptorCalculator
 {
-    private readonly Indigo indigo = new Indigo();
-
+    Indigo indigo = new Indigo();
     public IEnumerable<string> SupportedDescriptors => new[]
     {
             "MolecularWeight",
@@ -16,16 +15,16 @@ public class IndigoDescriptorCalculator : IMoleculeDescriptorCalculator
             "HeavyAtomCount"
         };
 
-    public async Task<Dictionary<string, double>> CalculateDescriptorsAsync(Molecule molecule)
+    public async Task<Dictionary<string, float>> CalculateDescriptorsAsync(Molecule molecule)
     {
         return await Task.Run(() =>
         {
             var indigoMolecule = indigo.loadMolecule(molecule.Smiles);
-            var descriptors = new Dictionary<string, double>
+            var descriptors = new Dictionary<string, float>
             {
-                ["MolecularWeight"] = indigoMolecule.molecularWeight(),
-                ["LogP"] = indigoMolecule.logP(),
-                ["TPSA"] = indigoMolecule.tpsa(),
+                ["MolecularWeight"] = (float)indigoMolecule.molecularWeight(),
+                ["LogP"] = (float)indigoMolecule.logP(),
+                ["TPSA"] = (float)indigoMolecule.tpsa(),
                 ["HeavyAtomCount"] = indigoMolecule.countHeavyAtoms()
             };
             return descriptors;

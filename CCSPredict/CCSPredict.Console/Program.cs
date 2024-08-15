@@ -3,7 +3,7 @@
 using CCSPredict.Data;
 using CCSPredict.ML;
 
-var dataProvider = new CsvCcsDataProvider("training_data.csv", "test_data.csv");
+var dataProvider = new CsvCcsDataProvider("C:\\Users\\chris\\Documents\\training.csv", "C:\\Users\\chris\\Documents\\test.csv");
 var predictor = new CcsPredictor(dataProvider);
 
 await predictor.TrainAndEvaluateAsync();
@@ -15,6 +15,6 @@ while (true)
     if (smiles.ToLower() == "exit") break;
 
     var prediction = await predictor.PredictCcsAsync(smiles);
-    Console.WriteLine($"Predicted CCS: {prediction.PredictedCcs} {prediction.PredictedCcs}");
+    Console.WriteLine($"Predicted CCS: {prediction.PredictedCcs.Value} {prediction.PredictedCcs.Unit}");
     Console.WriteLine($"Confidence: {prediction.Confidence}");
 }

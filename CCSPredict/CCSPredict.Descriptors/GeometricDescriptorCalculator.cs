@@ -11,14 +11,14 @@ public class GeometricDescriptorCalculator : IMoleculeDescriptorCalculator
 
     public IEnumerable<string> SupportedDescriptors => new[]
     {
-            "MolecularVolume",
+            //"MolecularVolume",
             "TPSA",
             "LabuteASA",
-            "IndigoVolume",
-            "IndigoSurfaceArea"
+            //"IndigoVolume",
+            //"IndigoSurfaceArea"
         };
 
-    public async Task<Dictionary<string, double>> CalculateDescriptorsAsync(Molecule molecule)
+    public async Task<Dictionary<string, float>> CalculateDescriptorsAsync(Molecule molecule)
     {
         return await Task.Run(() =>
         {
@@ -28,10 +28,10 @@ public class GeometricDescriptorCalculator : IMoleculeDescriptorCalculator
             indigoMol.aromatize();
             indigoMol.layout();
 
-            var descriptors = new Dictionary<string, double>
+            var descriptors = new Dictionary<string, float>
             {
-                ["TPSA"] = RDKFuncs.calcTPSA(rdkitMol),
-                ["LabuteASA"] = RDKFuncs.calcLabuteASA(rdkitMol)
+                ["TPSA"] = (float)RDKFuncs.calcTPSA(rdkitMol),
+                ["LabuteASA"] = (float)RDKFuncs.calcLabuteASA(rdkitMol)
             };
             return descriptors;
         });

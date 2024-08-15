@@ -14,15 +14,15 @@ public class RDKitDescriptorCalculator : IMoleculeDescriptorCalculator
             "NumHDonors"
         };
 
-    public async Task<Dictionary<string, double>> CalculateDescriptorsAsync(Molecule molecule)
+    public async Task<Dictionary<string, float>> CalculateDescriptorsAsync(Molecule molecule)
     {
         return await Task.Run(() =>
         {
             var mol = RWMol.MolFromSmiles(molecule.Smiles);
-            var descriptors = new Dictionary<string, double>
+            var descriptors = new Dictionary<string, float>
             {
-                ["ExactMolWt"] = RDKFuncs.calcExactMW(mol),
-                ["FractionCSP3"] = RDKFuncs.calcFractionCSP3(mol),
+                ["ExactMolWt"] = (float)RDKFuncs.calcExactMW(mol),
+                ["FractionCSP3"] = (float)RDKFuncs.calcFractionCSP3(mol),
                 ["NumRotatableBonds"] = RDKFuncs.calcNumRotatableBonds(mol),
                 //["NumHDonors"] = RDKFuncs.(mol)
             };

@@ -13,25 +13,25 @@ public class CombinedDescriptorCalculator : IMoleculeDescriptorCalculator
             {
                 new TopologicalDescriptorCalculator(),
                 new GeometricDescriptorCalculator(),
-                new ElectronicDescriptorCalculator(),
+                //new ElectronicDescriptorCalculator(),
                 new PhysicochemicalDescriptorCalculator(),
-                new FingerprintCalculator()
+                //new FingerprintCalculator()
             };
     }
 
     public IEnumerable<string> SupportedDescriptors =>
         calculators.SelectMany(c => c.SupportedDescriptors).Distinct();
 
-    public async Task<Dictionary<string, double>> CalculateDescriptorsAsync(Molecule molecule)
+    public async Task<Dictionary<string, float>> CalculateDescriptorsAsync(Molecule molecule)
     {
-        var allDescriptors = new Dictionary<string, double>();
+        var allDescriptors = new Dictionary<string, float>();
 
         foreach (var calculator in calculators)
         {
             var descriptors = await calculator.CalculateDescriptorsAsync(molecule);
             foreach (var kvp in descriptors)
             {
-                allDescriptors[kvp.Key] = kvp.Value;
+                allDescriptors[kvp.Key] = (float)kvp.Value;
             }
         }
 

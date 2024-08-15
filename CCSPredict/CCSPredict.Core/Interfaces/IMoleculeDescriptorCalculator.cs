@@ -4,6 +4,6 @@ namespace CCSPredict.Core.Interfaces;
 
 public interface IMoleculeDescriptorCalculator
 {
-    Task<Dictionary<string, double>> CalculateDescriptorsAsync(Molecule molecule);
+    Task<Dictionary<string, float>> CalculateDescriptorsAsync(Molecule molecule);
     IEnumerable<string> SupportedDescriptors { get; }
 }

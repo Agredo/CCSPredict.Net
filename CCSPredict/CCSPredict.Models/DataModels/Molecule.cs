@@ -10,7 +10,7 @@ public record Molecule
 {
     public string Smiles { get; set; }
     public string InChI { get; set; }
-    public Dictionary<string, double> Descriptors { get; set; } = new Dictionary<string, double>();
+    public Dictionary<string, float> Descriptors { get; set; } = new Dictionary<string, float>();
 
     public Molecule(string smiles, string inchi)
     {
