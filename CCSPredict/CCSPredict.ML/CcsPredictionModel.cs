@@ -13,6 +13,8 @@ public class CcsPredictionModel
     private readonly ICcsDataProvider dataProvider;
     private readonly CombinedDescriptorCalculator descriptorCalculator;
 
+    public IDataView data { get; private set; }
+
     public CcsPredictionModel(ICcsDataProvider dataProvider)
     {
         mlContext = new MLContext(seed: 0);
@@ -24,13 +26,13 @@ public class CcsPredictionModel
     {
         var trainingData = await dataProvider.GetTrainingDataAsync();
         var moleculeData = await PrepareDataAsync(trainingData);
-        
-        var data = mlContext.Data.LoadFromEnumerable(moleculeData);
+
+        data = mlContext.Data.LoadFromEnumerable(moleculeData);
 
         var featureColumnNames = new[]
         {
             "HallKierAlpha", "Kappa1", "Kappa2", "Kappa3",
-            "Chi0v", "Chi1v", "Chi2v", "Chi3v", "TPSA", "LabuteASA", "NumRadicalElectrons", "MaxPartialCharge", "MinPartialCharge", "MeanPartialCharge", 
+            "Chi0v", "Chi1v", "Chi2v", "Chi3v", "TPSA", "LabuteASA", "NumRadicalElectrons", "MaxPartialCharge", "MinPartialCharge", "MeanPartialCharge",
             "ExactMolWt", "NumRotatableBonds","NumHeavyAtoms","FractionCSP3"
         };
 
@@ -46,8 +48,8 @@ public class CcsPredictionModel
     {
         var descriptors = await descriptorCalculator.CalculateDescriptorsAsync(molecule);
         var predictionEngine = mlContext.Model.CreatePredictionEngine<MoleculeData, CcsPrediction>(model);
-        var moleculeData = new MoleculeData 
-        { 
+        var moleculeData = new MoleculeData
+        {
             HallKierAlpha = descriptors["HallKierAlpha"],
             Kappa1 = descriptors["Kappa1"],
             Kappa2 = descriptors["Kappa2"],
@@ -99,7 +101,7 @@ public class CcsPredictionModel
         var moleculeDataTasks = molecules.Where(m => m.Adduct == "[M+H]+").Select(async m =>
         {
             var descriptors = await descriptorCalculator.CalculateDescriptorsAsync(new Molecule(m.Smiles, m.InChI));
-            Console.WriteLine($"Nr. {++index} - Adduct: {m.Adduct} CCS: {m.CcsValue} m/z {m.MZ}" );
+            Console.WriteLine($"Nr. {++index} - Adduct: {m.Adduct} CCS: {m.CcsValue} m/z {m.MZ}");
             return new MoleculeData
             {
                 HallKierAlpha = descriptors["HallKierAlpha"],
@@ -137,6 +139,14 @@ public class CcsPredictionModel
     {
         mlContext.Model.Save(model, null, filePath);
     }
+
+    public void SaveOnnxModel(string filePath = "./model.onnx")
+    {
+        using FileStream stream = File.Create(filePath);
+        mlContext.Model.ConvertToOnnx(model, data, stream);
+        Console.WriteLine($"Model saved to {filePath}");
+    }
+
 
     public void LoadModel(string filePath)
     {

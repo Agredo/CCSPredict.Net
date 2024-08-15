@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CCSPredict.Models.DataModels;
+﻿namespace CCSPredict.Models.DataModels;
 
 public record Molecule
 {

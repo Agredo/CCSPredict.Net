@@ -27,6 +27,10 @@ public class CcsPredictor
 
         model.SaveModel("ccs_prediction_model.zip");
         Console.WriteLine("Model saved to ccs_prediction_model.zip");
+        model.SaveOnnxModel();
+        
+
+
     }
 
     public async Task<CcsPredictionResult> PredictCcsAsync(string smiles, string inchi = null)

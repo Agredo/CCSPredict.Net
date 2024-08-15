@@ -32,7 +32,7 @@ public class FingerprintCalculator : IMoleculeDescriptorCalculator
 
             // Atom Pair Fingerprint
             var atomPairFp = RDKFuncs.getAtomPairFingerprint(rdkitMol);
-            descriptors["AtomPairFingerprint"] = SparseIntVectToDouble(atomPairFp) ;
+            descriptors["AtomPairFingerprint"] = SparseIntVectToDouble(atomPairFp);
 
             // Topological Torsion Fingerprint
             var topologicalTorsionFp = RDKFuncs.getTopologicalTorsionFingerprint(rdkitMol);

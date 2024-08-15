@@ -1,7 +1,6 @@
 ﻿using CCSPredict.Models.DataModels;
 using CsvHelper;
 using CsvHelper.Configuration;
-using System.Formats.Asn1;
 using System.Globalization;
 
 namespace CCSPredict.Data;

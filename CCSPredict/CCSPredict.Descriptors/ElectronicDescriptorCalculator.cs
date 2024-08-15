@@ -24,7 +24,7 @@ public class ElectronicDescriptorCalculator : IMoleculeDescriptorCalculator
             for (int i = 0; i < mol.getNumAtoms(); i++)
             {
                 Atom atom = mol.getAtomWithIdx((uint)i);
-                if(atom.hasProp("_GasteigerCharge"))
+                if (atom.hasProp("_GasteigerCharge"))
                 {
                     string gasteigerCharge = atom.getProp("_GasteigerCharge");
 

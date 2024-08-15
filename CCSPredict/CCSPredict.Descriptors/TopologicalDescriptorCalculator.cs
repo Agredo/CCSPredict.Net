@@ -1,6 +1,5 @@
 ﻿using CCSPredict.Core.Interfaces;
 using CCSPredict.Models.DataModels;
-using com.epam.indigo;
 using GraphMolWrap;
 
 namespace CCSPredict.Descriptors;
