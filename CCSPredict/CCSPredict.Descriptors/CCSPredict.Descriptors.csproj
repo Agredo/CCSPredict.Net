@@ -18,6 +18,7 @@
 	</ItemGroup>
 	
 	<ItemGroup>
+	  <Folder Include="Helper\NewFolder\" />
 	  <Folder Include="Libraries\" />
 	</ItemGroup>
 	
