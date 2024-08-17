@@ -37,4 +37,19 @@ public class CombinedDescriptorCalculator : IMoleculeDescriptorCalculator
 
         return allDescriptors;
     }
+    public Dictionary<string, float> CalculateDescriptors(Molecule molecule)
+    {
+        var allDescriptors = new Dictionary<string, float>();
+
+        foreach (var calculator in calculators)
+        {
+            var descriptors =  calculator.CalculateDescriptorsAsync(molecule).Result;
+            foreach (var kvp in descriptors)
+            {
+                allDescriptors[kvp.Key] = (float)kvp.Value;
+            }
+        }
+
+        return allDescriptors;
+    }
 }

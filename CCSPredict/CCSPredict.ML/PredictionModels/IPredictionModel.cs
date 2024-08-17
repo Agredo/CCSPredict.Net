@@ -3,7 +3,7 @@ using CCSPredict.Descriptors;
 using CCSPredict.Models.DataModels;
 using Microsoft.ML;
 
-namespace CCSPredict.ML
+namespace CCSPredict.ML.PredictionModels
 {
     public interface IPredictionModel
     {

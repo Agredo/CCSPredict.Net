@@ -1,7 +1,7 @@
 ﻿using CCSPredict.Data;
 using Microsoft.ML;
 
-namespace CCSPredict.ML;
+namespace CCSPredict.ML.PredictionModels;
 
 public class FastTreePredictionModel : PredictionModel
 {

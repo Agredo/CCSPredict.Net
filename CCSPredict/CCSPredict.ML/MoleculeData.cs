@@ -4,12 +4,6 @@ namespace CCSPredict.ML;
 
 public class MoleculeData
 {
-    //[ColumnName("Descriptor1")]
-    //public double Descriptor1 { get; set; }
-
-    //[VectorType(2)]
-    //public Dictionary<string, double> Descriptors { get; set; }
-
     [ColumnName("HallKierAlpha")]
     public float HallKierAlpha { get; set; }
 

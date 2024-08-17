@@ -1,9 +1,11 @@
 ﻿using CCSPredict.Data;
 using CCSPredict.Descriptors;
 using CCSPredict.Models.DataModels;
+using com.epam.indigo;
+using GraphMolWrap;
 using Microsoft.ML;
 
-namespace CCSPredict.ML;
+namespace CCSPredict.ML.PredictionModels;
 
 public abstract class PredictionModel : IPredictionModel
 {
@@ -45,7 +47,8 @@ public abstract class PredictionModel : IPredictionModel
     public async Task<IEnumerable<MoleculeData>> PrepareDataAsync(IEnumerable<MoleculeWithCcs> molecules)
     {
         int index = 0;
-        var moleculeDataTasks = molecules.Where(m => m.Adduct == "[M+H]+").Select(async m =>
+
+        var moleculeDataTasks = molecules.Where(m => m.Adduct == "[M+Na]+").Select(async m =>
         {
             var descriptors = await descriptorCalculator.CalculateDescriptorsAsync(new Molecule(m.Smiles, m.InChI));
             Console.WriteLine($"Nr. {index++} - Adduct: {m.Adduct} CCS: {m.CcsValue} m/z {m.MZ}");
@@ -89,13 +92,88 @@ public abstract class PredictionModel : IPredictionModel
     public async Task TrainAsync()
     {
         var trainingData = await dataProvider.GetTrainingDataAsync();
-        var moleculeData = await PrepareDataAsync(trainingData);
+        var dataWithSmiles = new List<MoleculeWithCcs>();
 
-        data = mlContext.Data.LoadFromEnumerable(moleculeData);
+        Indigo indigo = new Indigo();
+        foreach (var molecule in trainingData)
+        {
+            if (string.IsNullOrEmpty(molecule.Smiles) && !string.IsNullOrEmpty(molecule.InChI))
+            {
+                try
+                {
+                    //Console.WriteLine($"Converting InChI to SMILES for molecule {molecule.InChI}");
+
+                    ExtraInchiReturnValues extra = new ExtraInchiReturnValues();
+                    RWMol mol = RDKFuncs.InchiToMol(molecule.InChI, extra);
+
+                    molecule.Smiles = mol.MolToSmiles();
+                    //molecule.Smiles = indigo.loadMolecule(molecule.InChI).canonicalSmiles();
+
+                    dataWithSmiles.Add(molecule);
+
+                    var moleculeData = await PrepareDataAsync(dataWithSmiles);
+
+                    data = mlContext.Data.LoadFromEnumerable(moleculeData);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to convert InChI to SMILES for molecule {molecule.InChI}: {ex.Message}");
+                }
+            }
+        }
+
+        if(dataWithSmiles.Count == 0)
+        {
+            var moleculeData = await PrepareDataAsync(trainingData);
+
+            data = mlContext.Data.LoadFromEnumerable(moleculeData);
+        }
+
+
     }
 
     public async Task<ModelMetrics> EvaluateAsync()
     {
+        var testData = await dataProvider.GetTestDataAsync();
+        var dataWithSmiles = new List<MoleculeWithCcs>();
+
+        Indigo indigo = new Indigo();
+        foreach (var molecule in testData)
+        {
+            if(string.IsNullOrEmpty(molecule.Smiles) && !string.IsNullOrEmpty(molecule.InChI))
+            {
+                try
+                {
+                    //Console.WriteLine($"Converting InChI to SMILES for molecule {molecule.InChI}");
+
+                    ExtraInchiReturnValues extra = new ExtraInchiReturnValues();
+                    RWMol mol = RDKFuncs.InchiToMol(molecule.InChI, extra);
+
+                    molecule.Smiles = mol.MolToSmiles();
+                    //molecule.Smiles = indigo.loadMolecule(molecule.InChI).canonicalSmiles();
+
+                    dataWithSmiles.Add(molecule);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to convert InChI to SMILES for molecule {molecule.InChI}: {ex.Message}");
+                }
+            }
+        }
+
+        if (dataWithSmiles.Count() > 0)
+        {
+            var moleculeData = await PrepareDataAsync(dataWithSmiles);
+
+            data = mlContext.Data.LoadFromEnumerable(moleculeData);
+        }
+        else
+        {
+            var moleculeData = await PrepareDataAsync(testData);
+
+            data = mlContext.Data.LoadFromEnumerable(moleculeData);
+        }
+
         var predictions = model.Transform(data);
         var metrics = mlContext.Regression.Evaluate(predictions);
 

@@ -1,6 +1,7 @@
-﻿using GraphMolWrap;
+﻿using CCSPredict.Models.DataModels;
+using GraphMolWrap;
 
-namespace CCSPredict.Descriptors.Helper;
+namespace CCSPredict.ML.Helper;
 
 public static class StructureConverter
 {
@@ -13,7 +14,7 @@ public static class StructureConverter
 
             return mol.MolToSmiles();
         }
-        catch (Exception ex)
+        catch(Exception ex)
         {
             Console.WriteLine($"Failed to convert InChI to SMILES. PLease insert an SMILES");
             return string.Empty;
@@ -26,8 +27,6 @@ public static class StructureConverter
         {
             ExtraInchiReturnValues extra = new ExtraInchiReturnValues();
             RWMol mol = RDKFuncs.InchiToMol(inchi, extra);
-
-            if (mol == null) return false;
 
             return true;
         }
@@ -42,8 +41,6 @@ public static class StructureConverter
         try
         {
             RWMol mol = RWMol.MolFromSmiles(smiles);
-
-            if (mol == null) return false;
 
             return true;
         }

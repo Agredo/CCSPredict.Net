@@ -1,4 +1,5 @@
 ﻿using CCSPredict.Data;
+using CCSPredict.ML.PredictionModels;
 using CCSPredict.Models.DataModels;
 using Microsoft.ML;
 
@@ -27,6 +28,7 @@ public class CcsPredictor
 
         Console.WriteLine("Training the SVM model...");
         await svmModel.TrainAsync();
+        //await svmModel.OptimizeParametersAsync();
 
         Console.WriteLine("Training the Random Forest model...");
         await randomForestModel.TrainAsync();
@@ -88,10 +90,6 @@ public class CcsPredictor
         neuralNetworkModel.SaveModel("neural_network_ccs_prediction_model.zip");
         Console.WriteLine("Model saved to neural_network_ccs_prediction_model.zip");
         neuralNetworkModel.SaveOnnxModel("./neuronal_model.onnx");
-
-
-
-
     }
 
     public async Task<CcsPredictionResult> PredictCcsAsync(string smiles, string inchi = null)
