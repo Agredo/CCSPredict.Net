@@ -4,7 +4,7 @@ using com.epam.indigo;
 
 namespace CCSPredict.Descriptors;
 
-public class IndigoDescriptorCalculator : IMoleculeDescriptorCalculator
+public class IndigoDescriptorCalculator : IMoleculeDescriptorCalculator<float>
 {
     Indigo indigo = new Indigo();
     public IEnumerable<string> SupportedDescriptors => new[]

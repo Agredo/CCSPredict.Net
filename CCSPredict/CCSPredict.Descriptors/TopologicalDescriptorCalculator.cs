@@ -4,7 +4,7 @@ using GraphMolWrap;
 
 namespace CCSPredict.Descriptors;
 
-public class TopologicalDescriptorCalculator : IMoleculeDescriptorCalculator
+public class TopologicalDescriptorCalculator : IMoleculeDescriptorCalculator<float>
 {
     public IEnumerable<string> SupportedDescriptors => new[]
     {

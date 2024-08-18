@@ -11,13 +11,15 @@ public class ModelOptimizer
 {
     private readonly MLContext mlContext;
     private readonly ICcsDataProvider dataProvider;
-    public CombinedDescriptorCalculator descriptorCalculator { get; set; }
+    public CombinedFloatDescriptorCalculator descriptorCalculator { get; set; }
+    public CombinedBitVectorDescriptorCalculator bitVectorDescriptorCalculator { get; set; }
 
     public ModelOptimizer(ICcsDataProvider dataProvider)
     {
         mlContext = new MLContext(seed: 0);
         this.dataProvider = dataProvider;
-        this.descriptorCalculator = new CombinedDescriptorCalculator();
+        this.descriptorCalculator = new CombinedFloatDescriptorCalculator();
+        this.bitVectorDescriptorCalculator = new CombinedBitVectorDescriptorCalculator();
     }
 
     public async Task<OptimizationResult> OptimizeModelAsync(string modelType, TimeSpan trainingTime)
@@ -97,6 +99,7 @@ public class ModelOptimizer
         var moleculeDataTasks = molecules.Where(m => m.Adduct == "[M+H]+").Select(async m =>
         {
             var descriptors = await descriptorCalculator.CalculateDescriptorsAsync(new Molecule(m.Smiles, m.InChI));
+            var bitVectorDescriptors = await bitVectorDescriptorCalculator.CalculateDescriptorsAsync(new Molecule(m.Smiles, m.InChI));
             Console.WriteLine($"Nr. {index++} - Adduct: {m.Adduct} CCS: {m.CcsValue} m/z {m.MZ}");
             return new MoleculeData
             {
@@ -113,7 +116,7 @@ public class ModelOptimizer
                 MolecularWeight = descriptors["ExactMolWt"],
                 NumHeavyAtoms = descriptors["NumHeavyAtoms"],
                 FractionCSP3 = descriptors["FractionCSP3"],
-                MorganFingerprint = descriptors["MorganFingerprint"],
+                MorganFingerprint = new VBuffer<float>(bitVectorDescriptors["MorganFingerprint"].Count, bitVectorDescriptors["MorganFingerprint"].ToArray()),
                 AtomPairFingerprint = descriptors["AtomPairFingerprint"],
                 TopologicalTorsionFingerprint = descriptors["TopologicalTorsionFingerprint"],
                 CcsValue = (float)m.CcsValue

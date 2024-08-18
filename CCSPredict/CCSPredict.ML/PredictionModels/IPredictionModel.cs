@@ -12,7 +12,7 @@ namespace CCSPredict.ML.PredictionModels
         MLContext mlContext { get; set; }
         ITransformer model { get; set; }
         ICcsDataProvider dataProvider { get; set; }
-        CombinedDescriptorCalculator descriptorCalculator { get; set; }
+        CombinedFloatDescriptorCalculator descriptorCalculator { get; set; }
 
 
 

@@ -21,6 +21,6 @@ public class RandomForestModel : PredictionModel
                 numberOfLeaves: 20,
                 minimumExampleCountPerLeaf: 10));
 
-        model = await Task.Run(() => pipeline.Fit(data));
+        model = await Task.Run(() => pipeline.Fit(traingData));
     }
 }

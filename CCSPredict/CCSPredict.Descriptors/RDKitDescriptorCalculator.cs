@@ -4,7 +4,7 @@ using GraphMolWrap;
 
 namespace CCSPredict.Descriptors;
 
-public class RDKitDescriptorCalculator : IMoleculeDescriptorCalculator
+public class RDKitDescriptorCalculator : IMoleculeDescriptorCalculator<float>
 {
     public IEnumerable<string> SupportedDescriptors => new[]
     {

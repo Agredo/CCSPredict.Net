@@ -5,7 +5,7 @@ using GraphMolWrap;
 
 namespace CCSPredict.Descriptors;
 
-public class PhysicochemicalDescriptorCalculator : IMoleculeDescriptorCalculator
+public class PhysicochemicalDescriptorCalculator : IMoleculeDescriptorCalculator<float>
 {
     private readonly Indigo indigo = new Indigo();
 

@@ -22,7 +22,7 @@ public class SvmModel : PredictionModel
             .Append(mlContext.Transforms.NormalizeMinMax("Features"))
             .Append(mlContext.Regression.Trainers.Sdca(labelColumnName: "CcsValue", maximumNumberOfIterations: 100));
 
-        model = await Task.Run(() => pipeline.Fit(data));
+        model = await Task.Run(() => pipeline.Fit(traingData));
     }
 
     public async Task OptimizeParametersAsync()

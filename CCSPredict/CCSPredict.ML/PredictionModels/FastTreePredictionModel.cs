@@ -18,6 +18,6 @@ public class FastTreePredictionModel : PredictionModel
             .Append(mlContext.Transforms.NormalizeMinMax("Features"))
             .Append(mlContext.Regression.Trainers.FastTreeTweedie(labelColumnName: "CcsValue"));
 
-        model = pipeline.Fit(data);
+        model = pipeline.Fit(traingData);
     }
 }

@@ -65,7 +65,8 @@ public class MoleculeData
     public float NumHeavyAtoms { get; set; }
 
     [ColumnName("MorganFingerprint")]
-    public float MorganFingerprint { get; set; }
+    [VectorType(2048)]
+    public VBuffer<float> MorganFingerprint { get; set; }
 
     [ColumnName("AtomPairFingerprint")]
     public float AtomPairFingerprint { get; set; }

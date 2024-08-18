@@ -4,7 +4,7 @@ using GraphMolWrap;
 
 namespace CCSPredict.Descriptors;
 
-public class ElectronicDescriptorCalculator : IMoleculeDescriptorCalculator
+public class ElectronicDescriptorCalculator : IMoleculeDescriptorCalculator<float>
 {
     public IEnumerable<string> SupportedDescriptors => new[]
     {

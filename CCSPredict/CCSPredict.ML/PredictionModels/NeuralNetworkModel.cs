@@ -23,6 +23,6 @@ public class NeuralNetworkModel : PredictionModel
                 optimizationTolerance: 1e-07f,
                 historySize: 50));
 
-        model = await Task.Run(() => pipeline.Fit(data));
+        model = await Task.Run(() => pipeline.Fit(traingData));
     }
 }

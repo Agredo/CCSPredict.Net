@@ -3,19 +3,18 @@ using CCSPredict.Models.DataModels;
 
 namespace CCSPredict.Descriptors;
 
-public class CombinedDescriptorCalculator : IMoleculeDescriptorCalculator
+public class CombinedFloatDescriptorCalculator : IMoleculeDescriptorCalculator<float>
 {
-    private readonly List<IMoleculeDescriptorCalculator> calculators;
+    private readonly List<IMoleculeDescriptorCalculator<float>> calculators;
 
-    public CombinedDescriptorCalculator()
+    public CombinedFloatDescriptorCalculator()
     {
-        calculators = new List<IMoleculeDescriptorCalculator>
+        calculators = new List<IMoleculeDescriptorCalculator<float>>
             {
                 new TopologicalDescriptorCalculator(),
                 new GeometricDescriptorCalculator(),
                 //new ElectronicDescriptorCalculator(),
-                new PhysicochemicalDescriptorCalculator(),
-                new FingerprintCalculator()
+                new PhysicochemicalDescriptorCalculator()
             };
     }
 
