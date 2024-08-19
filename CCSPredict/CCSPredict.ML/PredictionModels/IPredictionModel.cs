@@ -11,18 +11,16 @@ namespace CCSPredict.ML.PredictionModels
 
         MLContext mlContext { get; set; }
         ITransformer model { get; set; }
-        ICcsDataProvider dataProvider { get; set; }
         CombinedFloatDescriptorCalculator descriptorCalculator { get; set; }
 
 
 
         Task<ModelMetrics> EvaluateAsync();
         void LoadModel(string filePath);
-        Task<IEnumerable<MoleculeData>> PrepareDataAsync(IEnumerable<MoleculeWithCcs> molecules);
         Task<CcsPredictionResult> PredictAsync(Molecule molecule);
         void SaveModel(string filePath);
         void SaveOnnxModel(string filePath = "./model.onnx");
-        Task TrainAsync();
+        Task TrainAsync(double testFraction);
         double CalculateConfidence(CcsPrediction prediction);
     }
 }

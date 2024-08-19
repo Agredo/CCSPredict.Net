@@ -1,16 +1,18 @@
 ﻿using CCSPredict.Data;
+using CCSPredict.Descriptors;
 using Microsoft.ML;
 
 namespace CCSPredict.ML.PredictionModels;
 
 public class RandomForestModel : PredictionModel
 {
-    public RandomForestModel(ICcsDataProvider dataProvider) : base(dataProvider)
+    public RandomForestModel(CombinedFloatDescriptorCalculator descriptorCalculator, CombinedBitVectorDescriptorCalculator bitVectorDescriptorCalculator, IEnumerable<MoleculeData> moleculeData)
+        : base(descriptorCalculator, bitVectorDescriptorCalculator, moleculeData)
     {
     }
-    public async Task TrainAsync()
+    public async Task TrainAsync(double testFraction)
     {
-        await base.TrainAsync();
+        await base.TrainAsync(testFraction);
 
         var pipeline = mlContext.Transforms.CopyColumns("Label", "CcsValue")
             .Append(mlContext.Transforms.Concatenate("Features", GetFeatureColumnNames()))

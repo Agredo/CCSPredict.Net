@@ -7,7 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 var dataProvider = new CsvCcsDataProvider("C:\\Users\\chris\\Documents\\training.csv", "C:\\Users\\chris\\Documents\\test_ccs.csv");
-var predictor = new CcsPredictor(dataProvider);
+var predictor = new CcsPredictor(new ICcsDataProvider[] { dataProvider});
 
 
 await predictor.TrainAndEvaluateAsync();
@@ -23,7 +23,7 @@ while (true)
 
     if (StructureConverter.IsValidSmiles(input))
     {
-        smiles = StructureConverter.ConvertToSmiles(input);
+        smiles = input;
     }
     else
     {

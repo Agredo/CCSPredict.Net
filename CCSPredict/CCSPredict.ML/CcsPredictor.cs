@@ -1,7 +1,13 @@
 ﻿using CCSPredict.Data;
+using CCSPredict.Descriptors;
 using CCSPredict.ML.PredictionModels;
 using CCSPredict.Models.DataModels;
+using com.epam.indigo;
+using GraphMolWrap;
 using Microsoft.ML;
+using Microsoft.ML.Data;
+using System.Collections.Generic;
+using static TorchSharp.torch.utils;
 
 namespace CCSPredict.ML;
 
@@ -12,29 +18,132 @@ public class CcsPredictor
     private readonly RandomForestModel randomForestModel;
     private readonly NeuralNetworkModel neuralNetworkModel;
 
-    public CcsPredictor(ICcsDataProvider dataProvider)
+    private readonly CombinedFloatDescriptorCalculator descriptorCalculator;
+    private readonly CombinedBitVectorDescriptorCalculator bitVectorDescriptorCalculator;
+
+    public CcsPredictor(ICcsDataProvider[] dataProviders)
     {
-        model = new FastTreePredictionModel(dataProvider);
-        svmModel = new SvmModel(dataProvider);
-        randomForestModel = new RandomForestModel(dataProvider);
-        neuralNetworkModel = new NeuralNetworkModel(dataProvider);
+        descriptorCalculator = new CombinedFloatDescriptorCalculator();
+        bitVectorDescriptorCalculator = new CombinedBitVectorDescriptorCalculator();
+        
+        List<MoleculeData> moleculeData = new List<MoleculeData>();
+
+        foreach (ICcsDataProvider provider in dataProviders)
+        {
+            moleculeData.AddRange(provideData(provider).Result);
+        }
+
+        model = new FastTreePredictionModel(descriptorCalculator, bitVectorDescriptorCalculator, moleculeData);
+        svmModel = new SvmModel(descriptorCalculator, bitVectorDescriptorCalculator, moleculeData);
+        randomForestModel = new RandomForestModel(descriptorCalculator, bitVectorDescriptorCalculator, moleculeData);
+        neuralNetworkModel = new NeuralNetworkModel(descriptorCalculator, bitVectorDescriptorCalculator, moleculeData);
+    }
+
+    private async Task<IEnumerable<MoleculeData>> provideData(ICcsDataProvider dataProvider)
+    {
+        var trainingData = await dataProvider.GetTrainingDataAsync();
+        var testingData = await dataProvider.GetTestDataAsync();
+
+        var mergedData = new List<MoleculeWithCcs>();
+        mergedData.AddRange(trainingData);
+        mergedData.AddRange(testingData);
+
+        var dataWithSmiles = new List<MoleculeWithCcs>();
+
+        Indigo indigo = new Indigo();
+        foreach (var molecule in mergedData)
+        {
+            if (!string.IsNullOrEmpty(molecule.Smiles))
+            {
+                dataWithSmiles.Add(molecule);
+            }
+            else if (string.IsNullOrEmpty(molecule.Smiles) && !string.IsNullOrEmpty(molecule.InChI))
+            {
+                try
+                {
+                    ExtraInchiReturnValues extra = new ExtraInchiReturnValues();
+                    RWMol mol = RDKFuncs.InchiToMol(molecule.InChI, extra);
+
+                    molecule.Smiles = mol.MolToSmiles();
+
+                    dataWithSmiles.Add(molecule);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to convert InChI to SMILES for molecule {molecule.InChI}: {ex.Message}");
+                }
+            }
+        }
+
+        IEnumerable<MoleculeData> moleculeData;
+
+        if (dataWithSmiles.Count > 0)
+        {
+            moleculeData = await PrepareDataAsync(dataWithSmiles);
+        }
+
+        else
+        {
+            moleculeData = await PrepareDataAsync(mergedData);
+        }
+
+        return moleculeData;
+    }
+
+    public async Task<IEnumerable<MoleculeData>> PrepareDataAsync(IEnumerable<MoleculeWithCcs> molecules)
+    {
+        int index = 0;
+
+        var moleculeDataTasks = molecules.Where(m => m.Adduct == "[M+H]+" || m.Adduct.Contains("H2O")).Select(async m =>
+        {
+            var descriptors = await descriptorCalculator.CalculateDescriptorsAsync(new Molecule(m.Smiles, m.InChI));
+            var bitVectorDescriptors = await bitVectorDescriptorCalculator.CalculateDescriptorsAsync(new Molecule(m.Smiles, m.InChI));
+            Console.WriteLine($"Nr. {index++} - Adduct: {m.Adduct} CCS: {m.CcsValue} m/z {m.MZ}");
+            return new MoleculeData
+            {
+                HallKierAlpha = descriptors["HallKierAlpha"],
+                Kappa1 = descriptors["Kappa1"],
+                Kappa2 = descriptors["Kappa2"],
+                Kappa3 = descriptors["Kappa3"],
+                Chi0v = descriptors["Chi0v"],
+                Chi1v = descriptors["Chi1v"],
+                Chi2v = descriptors["Chi2v"],
+                Chi3v = descriptors["Chi3v"],
+                TPSA = descriptors["TPSA"],
+                LabuteASA = descriptors["LabuteASA"],
+                MolecularWeight = descriptors["ExactMolWt"],
+                NumHeavyAtoms = descriptors["NumHeavyAtoms"],
+                FractionCSP3 = descriptors["FractionCSP3"],
+                MorganFingerprint = new VBuffer<float>(bitVectorDescriptors["MorganFingerprint"].Count, bitVectorDescriptors["MorganFingerprint"].ToArray()),
+                MACCSFingerprint = new VBuffer<float>(bitVectorDescriptors["MACCSFingerprint"].Count, bitVectorDescriptors["MACCSFingerprint"].ToArray()),
+                //AtomPairFingerprint = new VBuffer<float>(bitVectorDescriptors["AtomPairFingerprint"].Count, bitVectorDescriptors["AtomPairFingerprint"].ToArray()),
+                //TopologicalTorsionFingerprint = new VBuffer<float>(bitVectorDescriptors["TopologicalTorsionFingerprint"].Count, bitVectorDescriptors["TopologicalTorsionFingerprint"].ToArray()),
+
+
+                CcsValue = (float)m.CcsValue
+            };
+        });
+
+        return await Task.WhenAll(moleculeDataTasks);
     }
 
 
     public async Task TrainAndEvaluateAsync()
     {
+        double testFraction = 0.01;
+
         Console.WriteLine("Training the model...");
-        await model.TrainAsync();
+        await model.TrainAsync(testFraction);
 
         Console.WriteLine("Training the SVM model...");
-        await svmModel.TrainAsync();
+        await svmModel.TrainAsync(testFraction);
         //await svmModel.OptimizeParametersAsync();
 
         Console.WriteLine("Training the Random Forest model...");
-        await randomForestModel.TrainAsync();
+        await randomForestModel.TrainAsync(testFraction);
 
         Console.WriteLine("Training the Neural Network model...");
-        await neuralNetworkModel.TrainAsync();
+        await neuralNetworkModel.TrainAsync(testFraction);
 
         Console.WriteLine("Evaluating the model...");
         var metrics = await model.EvaluateAsync();

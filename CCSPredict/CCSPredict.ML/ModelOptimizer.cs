@@ -117,8 +117,7 @@ public class ModelOptimizer
                 NumHeavyAtoms = descriptors["NumHeavyAtoms"],
                 FractionCSP3 = descriptors["FractionCSP3"],
                 MorganFingerprint = new VBuffer<float>(bitVectorDescriptors["MorganFingerprint"].Count, bitVectorDescriptors["MorganFingerprint"].ToArray()),
-                AtomPairFingerprint = descriptors["AtomPairFingerprint"],
-                TopologicalTorsionFingerprint = descriptors["TopologicalTorsionFingerprint"],
+                MACCSFingerprint = new VBuffer<float>(bitVectorDescriptors["MACCSFingerprint"].Count, bitVectorDescriptors["MACCSFingerprint"].ToArray()),
                 CcsValue = (float)m.CcsValue
             };
         });

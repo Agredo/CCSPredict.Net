@@ -1,4 +1,5 @@
 ﻿using CCSPredict.Data;
+using CCSPredict.Descriptors;
 using Microsoft.ML;
 using Microsoft.ML.AutoML;
 using Microsoft.ML.Trainers;
@@ -8,14 +9,15 @@ namespace CCSPredict.ML.PredictionModels;
 
 public class SvmModel : PredictionModel
 {
-    public SvmModel(ICcsDataProvider dataProvider) : base(dataProvider)
+    public SvmModel(CombinedFloatDescriptorCalculator descriptorCalculator, CombinedBitVectorDescriptorCalculator bitVectorDescriptorCalculator, IEnumerable<MoleculeData> moleculeData)
+        : base(descriptorCalculator, bitVectorDescriptorCalculator, moleculeData)
     {
 
     }
 
-    public async Task TrainAsync()
+    public async Task TrainAsync(double testFraction)
     {
-        await base.TrainAsync();
+        await base.TrainAsync(testFraction);
 
         var pipeline = mlContext.Transforms.CopyColumns("Label", "CcsValue")
             .Append(mlContext.Transforms.Concatenate("Features", GetFeatureColumnNames()))
@@ -27,7 +29,7 @@ public class SvmModel : PredictionModel
 
     public async Task OptimizeParametersAsync()
     {
-        await base.TrainAsync();
+        await base.TrainAsync(0.01);
 
         var experimentSettings = new RegressionExperimentSettings
         {

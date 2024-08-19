@@ -11,8 +11,11 @@ public class FingerprintCalculator : IMoleculeDescriptorCalculator<List<float>>
 
     public IEnumerable<string> SupportedDescriptors => new[]
     {
-            "MorganFingerprint",
-        };
+        "MorganFingerprint",
+        "AtomPairFingerprint",
+        "TopologicalTorsionFingerprint",
+        "MACCSFingerprint"
+    };
 
     public async Task<Dictionary<string, List<float>>> CalculateDescriptorsAsync(Molecule molecule)
     {
@@ -23,22 +26,17 @@ public class FingerprintCalculator : IMoleculeDescriptorCalculator<List<float>>
             var descriptors = new Dictionary<string, List<float>>();
 
             // Morgan (ECFP) Fingerprint
-            var morganFp = RDKFuncs.getMorganFingerprintAsBitVect(rdkitMol, 2, 2048);
-            descriptors["MorganFingerprint"] = CalculateMorganFingerprint(morganFp);
+            var morganFp = RDKFuncs.getMorganFingerprintAsBitVect(rdkitMol, 3, 2048);
+            descriptors["MorganFingerprint"] = CalculateFingerprint(morganFp);
 
-            //// Atom Pair Fingerprint
-            //var atomPairFp = RDKFuncs.getAtomPairFingerprint(rdkitMol);
-            //descriptors["AtomPairFingerprint"] = SparseIntVectToDouble(atomPairFp);
+            //SparseIntVect32 atomPairFingerprint = RDKFuncs.getAtomPairFingerprint(rdkitMol);
+            //descriptors["AtomPairFingerprint"] = CalculateFingerprint(atomPairFingerprint);
 
-            //// Topological Torsion Fingerprint
-            //var topologicalTorsionFp = RDKFuncs.getTopologicalTorsionFingerprint(rdkitMol);
-            //descriptors["TopologicalTorsionFingerprint"] = SparseIntVectToDouble(topologicalTorsionFp);
+            //SparseIntVect64 topologicalFingerprint = RDKFuncs.getTopologicalTorsionFingerprint(rdkitMol);
+            //descriptors["TopologicalTorsionFingerprint"] = CalculateFingerprint(topologicalFingerprint);
 
-            //// Indigo Fingerprint
-            //var indigoFp = indigoMol.fingerprint("sim");
-            //descriptors["IndigoFingerprint"] = FingerprintToDouble(indigoFp);
-
-
+            ExplicitBitVect maccsFingerprint = RDKFuncs.MACCSFingerprintMol(rdkitMol);
+            descriptors["MACCSFingerprint"] = CalculateFingerprint(maccsFingerprint);
 
             return descriptors;
         });
@@ -49,7 +47,7 @@ public class FingerprintCalculator : IMoleculeDescriptorCalculator<List<float>>
         return bv.getNumOnBits() / bv.getNumBits();
     }
 
-    private new List<float> CalculateMorganFingerprint(ExplicitBitVect fingerprint)
+    private new List<float> CalculateFingerprint(ExplicitBitVect fingerprint)
     {
         var bits = new List<float>();
 
@@ -59,6 +57,29 @@ public class FingerprintCalculator : IMoleculeDescriptorCalculator<List<float>>
         }
         return bits;
     }
+
+    private new List<float> CalculateFingerprint(SparseIntVect32 fingerprint)
+    {
+        var bits = new List<float>();
+
+        for (int i = 0; i < fingerprint.getLength(); i++)
+        {
+            bits.Add(fingerprint.getVal(i));
+        }
+        return bits;
+    }
+
+    private new List<float> CalculateFingerprint(SparseIntVect64 fingerprint)
+    {
+        var bits = new List<float>();
+
+        for (int i = 0; i < fingerprint.getLength(); i++)
+        {
+            bits.Add(fingerprint.getVal(i));
+        }
+        return bits;
+    }
+
 
     private float SparseIntVectToDouble(SparseIntVect32 siv)
     {

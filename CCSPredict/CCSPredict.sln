@@ -23,6 +23,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Projektmappenelemente", "Pr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CCSPredict.Data", "CCSPredict.Data\CCSPredict.Data.csproj", "{8691064A-2637-40FA-8190-C5E5D349B933}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CCSPredict.OnnxLoader", "CCSPredict.OnnxLoader\CCSPredict.OnnxLoader.csproj", "{EF3CCF42-A343-4ED0-B637-62A004FCC690}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,14 @@ Global
 		{8691064A-2637-40FA-8190-C5E5D349B933}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8691064A-2637-40FA-8190-C5E5D349B933}.Release|x64.ActiveCfg = Release|x64
 		{8691064A-2637-40FA-8190-C5E5D349B933}.Release|x64.Build.0 = Release|x64
+		{EF3CCF42-A343-4ED0-B637-62A004FCC690}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF3CCF42-A343-4ED0-B637-62A004FCC690}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF3CCF42-A343-4ED0-B637-62A004FCC690}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EF3CCF42-A343-4ED0-B637-62A004FCC690}.Debug|x64.Build.0 = Debug|Any CPU
+		{EF3CCF42-A343-4ED0-B637-62A004FCC690}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF3CCF42-A343-4ED0-B637-62A004FCC690}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF3CCF42-A343-4ED0-B637-62A004FCC690}.Release|x64.ActiveCfg = Release|Any CPU
+		{EF3CCF42-A343-4ED0-B637-62A004FCC690}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

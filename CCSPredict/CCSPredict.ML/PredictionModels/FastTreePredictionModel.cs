@@ -1,17 +1,19 @@
 ﻿using CCSPredict.Data;
+using CCSPredict.Descriptors;
 using Microsoft.ML;
 
 namespace CCSPredict.ML.PredictionModels;
 
 public class FastTreePredictionModel : PredictionModel
 {
-    public FastTreePredictionModel(ICcsDataProvider dataProvider) : base(dataProvider)
+    public FastTreePredictionModel(CombinedFloatDescriptorCalculator descriptorCalculator, CombinedBitVectorDescriptorCalculator bitVectorDescriptorCalculator, IEnumerable<MoleculeData> moleculeData) 
+        : base(descriptorCalculator, bitVectorDescriptorCalculator, moleculeData)
     {
     }
 
-    public async Task TrainAsync()
+    public async Task TrainAsync(double testFraction)
     {
-        await base.TrainAsync();
+        await base.TrainAsync(testFraction);
 
         var pipeline = mlContext.Transforms.CopyColumns("Label", "CcsValue")
             .Append(mlContext.Transforms.Concatenate("Features", GetFeatureColumnNames()))

@@ -69,10 +69,16 @@ public class MoleculeData
     public VBuffer<float> MorganFingerprint { get; set; }
 
     [ColumnName("AtomPairFingerprint")]
-    public float AtomPairFingerprint { get; set; }
+    [VectorType(2048)]
+    public VBuffer<float> AtomPairFingerprint { get; set; }
 
     [ColumnName("TopologicalTorsionFingerprint")]
-    public float TopologicalTorsionFingerprint { get; set; }
+    [VectorType(2048)]
+    public VBuffer<float> TopologicalTorsionFingerprint { get; set; }
+
+    [ColumnName("MACCSFingerprint")]
+    [VectorType(167)]
+    public VBuffer<float> MACCSFingerprint { get; set; }
 
     [ColumnName("CcsValue")]
     public float CcsValue { get; set; }
