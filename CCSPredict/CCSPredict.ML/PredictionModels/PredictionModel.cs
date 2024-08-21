@@ -95,19 +95,10 @@ public abstract class PredictionModel : IPredictionModel
         Console.WriteLine($"Model saved to {filePath}");
     }
 
-    public async Task TrainAsync(double testFraction)
-    {
-        data = mlContext.Data.LoadFromEnumerable(moleculeData);
-        dataSplit = mlContext.Data.TrainTestSplit(data, testFraction: testFraction);
-
-        traingData = dataSplit.TrainSet;
-        testData = dataSplit.TestSet;
-    }
-
     public async Task<ModelMetrics> EvaluateAsync()
     {
         var predictions = model.Transform(testData);
-        var metrics = mlContext.Regression.Evaluate(predictions);
+        var metrics = mlContext.Regression.Evaluate(predictions, labelColumnName: "CcsValue");
 
         return new ModelMetrics
         {
@@ -158,4 +149,19 @@ public abstract class PredictionModel : IPredictionModel
             //TopologicalTorsionFingerprint = new VBuffer<float>(bitVectorDescriptors["TopologicalTorsionFingerprint"].Count, bitVectorDescriptors["TopologicalTorsionFingerprint"].ToArray())
         };
     }
+
+    public void PrepareTrainingAndEvaluationData(double testFraction)
+    {
+        data = mlContext.Data.LoadFromEnumerable(moleculeData);
+        dataSplit = mlContext.Data.TrainTestSplit(data, testFraction: testFraction);
+
+        traingData = dataSplit.TrainSet;
+        testData = dataSplit.TestSet;
+    }
+
+    public abstract Task TrainAsync();
+
+    public abstract Task SweepableTrainAndOptimize();
+
+    public abstract Task ExperimimentalTrainAndOptimize();
 }

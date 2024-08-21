@@ -130,20 +130,24 @@ public class CcsPredictor
 
     public async Task TrainAndEvaluateAsync()
     {
-        double testFraction = 0.01;
+        double testFraction = 0.2;
 
         Console.WriteLine("Training the model...");
-        await model.TrainAsync(testFraction);
+        model.PrepareTrainingAndEvaluationData(testFraction);
+        await model.SweepableTrainAndOptimize();
 
         Console.WriteLine("Training the SVM model...");
-        await svmModel.TrainAsync(testFraction);
+        svmModel.PrepareTrainingAndEvaluationData(testFraction);
+        await svmModel.TrainAsync();
         //await svmModel.OptimizeParametersAsync();
 
         Console.WriteLine("Training the Random Forest model...");
-        await randomForestModel.TrainAsync(testFraction);
+        randomForestModel.PrepareTrainingAndEvaluationData(testFraction);
+        await randomForestModel.TrainAsync();
 
         Console.WriteLine("Training the Neural Network model...");
-        await neuralNetworkModel.TrainAsync(testFraction);
+        neuralNetworkModel.PrepareTrainingAndEvaluationData(testFraction);
+        await neuralNetworkModel.TrainAsync();
 
         Console.WriteLine("Evaluating the model...");
         var metrics = await model.EvaluateAsync();

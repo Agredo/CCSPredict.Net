@@ -14,10 +14,50 @@ public class SvmModel : PredictionModel
     {
 
     }
-
-    public async Task TrainAsync(double testFraction)
+    public override async Task ExperimimentalTrainAndOptimize()
     {
-        await base.TrainAsync(testFraction);
+        var experimentSettings = new RegressionExperimentSettings
+        {
+            MaxExperimentTimeInSeconds = 60,
+            OptimizingMetric = RegressionMetric.RSquared
+        };
+
+
+        var experiment = mlContext.Auto().CreateRegressionExperiment(experimentSettings);
+
+        var experimentResult = experiment.Execute(traingData, testData, labelColumnName: "CcsValue");
+
+        model = experimentResult.BestRun.Model;
+    }
+
+    public override async Task SweepableTrainAndOptimize()
+    {
+
+        var sweepablePipeline = mlContext.Auto().Featurizer(traingData)
+            .Append(mlContext.Regression.Trainers.Sdca(labelColumnName: "CcsValue", maximumNumberOfIterations: 100))
+            .Append(mlContext.Auto().Regression(labelColumnName: "CcsValue"));
+
+        var experimentSweepable = mlContext.Auto().CreateExperiment();
+
+        experimentSweepable.SetPipeline(sweepablePipeline)
+            .SetRegressionMetric(RegressionMetric.RSquared, labelColumn: "CcsValue")
+            .SetTrainingTimeInSeconds(60)
+            .SetDataset(traingData);
+
+        // Log experiment trials
+        mlContext.Log += (_, e) => {
+            if (e.Source.Equals("AutoMLExperiment"))
+            {
+                Console.WriteLine(e.RawMessage);
+            }
+        };
+
+        TrialResult experimentResults = await experimentSweepable.RunAsync();
+
+        model = experimentResults.Model;
+    }
+    public async override Task TrainAsync()
+    {
 
         var pipeline = mlContext.Transforms.CopyColumns("Label", "CcsValue")
             .Append(mlContext.Transforms.Concatenate("Features", GetFeatureColumnNames()))
@@ -25,33 +65,5 @@ public class SvmModel : PredictionModel
             .Append(mlContext.Regression.Trainers.Sdca(labelColumnName: "CcsValue", maximumNumberOfIterations: 100));
 
         model = await Task.Run(() => pipeline.Fit(traingData));
-    }
-
-    public async Task OptimizeParametersAsync()
-    {
-        await base.TrainAsync(0.01);
-
-        var experimentSettings = new RegressionExperimentSettings
-        {
-            OptimizingMetric = RegressionMetric.RSquared,
-            CacheBeforeTrainer = CacheBeforeTrainer.On,
-            MaxModels = 100
-        };
-
-        TrainTestData trainValidationData = mlContext.Data.TrainTestSplit(data, testFraction: 0.2);
-        SweepablePipeline pipeline =
-            mlContext.Auto().Featurizer(data)
-                .Append(mlContext.Auto().Regression(labelColumnName: "CcsValue"));
-
-        var experiment = mlContext.Auto().CreateExperiment();
-
-        experiment.SetPipeline(pipeline)
-            .SetRegressionMetric(RegressionMetric.RSquared, labelColumn: "CcsValue")
-            .SetDataset(trainValidationData);
-
-        TrialResult experimentResults = await experiment.RunAsync();
-
-        model = experimentResults.Model;
-
     }
 }

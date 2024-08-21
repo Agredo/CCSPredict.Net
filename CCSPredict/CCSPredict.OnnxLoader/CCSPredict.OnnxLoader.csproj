@@ -11,6 +11,12 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.19.0" />
+    <PackageReference Include="RDKitDotNetCore" Version="2024.6.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CCSPredict.Descriptors\CCSPredict.Descriptors.csproj" />
+    <ProjectReference Include="..\CCSPredict.ML\CCSPredict.ML.csproj" />
   </ItemGroup>
 
 </Project>

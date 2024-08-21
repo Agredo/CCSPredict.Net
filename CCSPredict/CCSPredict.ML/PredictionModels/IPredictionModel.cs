@@ -20,7 +20,10 @@ namespace CCSPredict.ML.PredictionModels
         Task<CcsPredictionResult> PredictAsync(Molecule molecule);
         void SaveModel(string filePath);
         void SaveOnnxModel(string filePath = "./model.onnx");
-        Task TrainAsync(double testFraction);
+        void PrepareTrainingAndEvaluationData(double testFraction);
+        Task TrainAsync();
+        Task SweepableTrainAndOptimize();
+        Task ExperimimentalTrainAndOptimize();
         double CalculateConfidence(CcsPrediction prediction);
     }
 }

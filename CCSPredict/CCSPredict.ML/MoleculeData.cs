@@ -68,13 +68,13 @@ public class MoleculeData
     [VectorType(2048)]
     public VBuffer<float> MorganFingerprint { get; set; }
 
-    [ColumnName("AtomPairFingerprint")]
-    [VectorType(2048)]
-    public VBuffer<float> AtomPairFingerprint { get; set; }
+    //[ColumnName("AtomPairFingerprint")]
+    //[VectorType(2048)]
+    //public VBuffer<float> AtomPairFingerprint { get; set; }
 
-    [ColumnName("TopologicalTorsionFingerprint")]
-    [VectorType(2048)]
-    public VBuffer<float> TopologicalTorsionFingerprint { get; set; }
+    //[ColumnName("TopologicalTorsionFingerprint")]
+    //[VectorType(2048)]
+    //public VBuffer<float> TopologicalTorsionFingerprint { get; set; }
 
     [ColumnName("MACCSFingerprint")]
     [VectorType(167)]
