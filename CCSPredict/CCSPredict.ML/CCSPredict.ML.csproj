@@ -5,14 +5,14 @@
 		<TargetFramework>$(CCSPredictTargetFramework)</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Platforms>AnyCPU;x64</Platforms>
+    <Platforms>x64</Platforms>
   </PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Microsoft.ML" Version="3.0.1" />
-	  <PackageReference Include="Microsoft.ML.AutoML" Version="0.21.1" />
-	  <PackageReference Include="Microsoft.ML.FastTree" Version="3.0.1" />
-	  <PackageReference Include="Microsoft.ML.OnnxConverter" Version="0.21.1" />
+	  <PackageReference Include="Microsoft.ML" Version="4.0.1" />
+	  <PackageReference Include="Microsoft.ML.AutoML" Version="0.22.1" />
+	  <PackageReference Include="Microsoft.ML.FastTree" Version="4.0.1" />
+	  <PackageReference Include="Microsoft.ML.OnnxConverter" Version="0.22.1" />
 	</ItemGroup>
 
 	<ItemGroup>

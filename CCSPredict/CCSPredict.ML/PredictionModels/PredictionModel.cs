@@ -1,12 +1,5 @@
-﻿using CCSPredict.Data;
-using CCSPredict.Descriptors;
-using CCSPredict.Models.DataModels;
-using com.epam.indigo;
-using GraphMolWrap;
+﻿using CCSPredict.Models.DataModels;
 using Microsoft.ML;
-using Microsoft.ML.Data;
-using System.Collections.Generic;
-using System.Linq;
 using static Microsoft.ML.DataOperationsCatalog;
 
 namespace CCSPredict.ML.PredictionModels;
@@ -21,18 +14,17 @@ public abstract class PredictionModel : IPredictionModel
 
     private readonly IEnumerable<MoleculeData> moleculeData;
 
+    public DescriptorsCalculator DescriptorCalculator { get; private set; }
     public ITransformer model { get; set; }
-    public CombinedFloatDescriptorCalculator descriptorCalculator { get; set; }
-    public CombinedBitVectorDescriptorCalculator bitVectorDescriptorCalculator { get; set; }
 
-    protected PredictionModel(CombinedFloatDescriptorCalculator descriptorCalculator, CombinedBitVectorDescriptorCalculator bitVectorDescriptorCalculator, IEnumerable<MoleculeData> moleculeData)
+
+    protected PredictionModel(IEnumerable<MoleculeData> moleculeData)
     {
         mlContext = new MLContext(seed: 0);
 
         this.moleculeData = moleculeData;
 
-        this.descriptorCalculator = descriptorCalculator;
-        this.bitVectorDescriptorCalculator = bitVectorDescriptorCalculator;
+        this.DescriptorCalculator = new DescriptorsCalculator();
     }
 
     public static string[] GetFeatureColumnNames()
@@ -124,30 +116,7 @@ public abstract class PredictionModel : IPredictionModel
 
     private async Task<MoleculeData> CalculateDescriptorsAsync(Molecule molecule)
     {
-        var descriptorCalculator = new CombinedFloatDescriptorCalculator();
-        var descriptors = await descriptorCalculator.CalculateDescriptorsAsync(molecule);
-        var bitVectorDescriptors = await bitVectorDescriptorCalculator.CalculateDescriptorsAsync(molecule); 
-
-        return new MoleculeData
-        {
-            HallKierAlpha = (float)descriptors["HallKierAlpha"],
-            Kappa1 = (float)descriptors["Kappa1"],
-            Kappa2 = (float)descriptors["Kappa2"],
-            Kappa3 = (float)descriptors["Kappa3"],
-            Chi0v = (float)descriptors["Chi0v"],
-            Chi1v = (float)descriptors["Chi1v"],
-            Chi2v = (float)descriptors["Chi2v"],
-            Chi3v = (float)descriptors["Chi3v"],
-            TPSA = (float)descriptors["TPSA"],
-            LabuteASA = (float)descriptors["LabuteASA"],
-            MolecularWeight = (float)descriptors["ExactMolWt"],
-            NumHeavyAtoms = (float)descriptors["NumHeavyAtoms"],
-            FractionCSP3 = (float)descriptors["FractionCSP3"],
-            MorganFingerprint = new VBuffer<float>(bitVectorDescriptors["MorganFingerprint"].Count, bitVectorDescriptors["MorganFingerprint"].ToArray()),
-            MACCSFingerprint = new VBuffer<float>(bitVectorDescriptors["MACCSFingerprint"].Count, bitVectorDescriptors["MACCSFingerprint"].ToArray()),
-            //AtomPairFingerprint = new VBuffer<float>(bitVectorDescriptors["AtomPairFingerprint"].Count, bitVectorDescriptors["AtomPairFingerprint"].ToArray()),
-            //TopologicalTorsionFingerprint = new VBuffer<float>(bitVectorDescriptors["TopologicalTorsionFingerprint"].Count, bitVectorDescriptors["TopologicalTorsionFingerprint"].ToArray())
-        };
+        return await DescriptorCalculator.CalculateDescriptorsAsync(molecule);
     }
 
     public void PrepareTrainingAndEvaluationData(double testFraction)

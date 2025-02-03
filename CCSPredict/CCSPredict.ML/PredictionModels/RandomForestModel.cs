@@ -8,8 +8,8 @@ namespace CCSPredict.ML.PredictionModels;
 
 public class RandomForestModel : PredictionModel
 {
-    public RandomForestModel(CombinedFloatDescriptorCalculator descriptorCalculator, CombinedBitVectorDescriptorCalculator bitVectorDescriptorCalculator, IEnumerable<MoleculeData> moleculeData)
-        : base(descriptorCalculator, bitVectorDescriptorCalculator, moleculeData)
+    public RandomForestModel(IEnumerable<MoleculeData> moleculeData)
+        : base(moleculeData)
     {
     }
 

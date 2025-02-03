@@ -18,14 +18,10 @@ public class CcsPredictor
     private readonly RandomForestModel randomForestModel;
     private readonly NeuralNetworkModel neuralNetworkModel;
 
-    private readonly CombinedFloatDescriptorCalculator descriptorCalculator;
-    private readonly CombinedBitVectorDescriptorCalculator bitVectorDescriptorCalculator;
+    public DescriptorsCalculator DescriptorsCalculator { get; private set; } = new DescriptorsCalculator();
 
     public CcsPredictor(ICcsDataProvider[] dataProviders)
-    {
-        descriptorCalculator = new CombinedFloatDescriptorCalculator();
-        bitVectorDescriptorCalculator = new CombinedBitVectorDescriptorCalculator();
-        
+    {   
         List<MoleculeData> moleculeData = new List<MoleculeData>();
 
         foreach (ICcsDataProvider provider in dataProviders)
@@ -33,10 +29,10 @@ public class CcsPredictor
             moleculeData.AddRange(provideData(provider).Result);
         }
 
-        model = new FastTreePredictionModel(descriptorCalculator, bitVectorDescriptorCalculator, moleculeData);
-        svmModel = new SvmModel(descriptorCalculator, bitVectorDescriptorCalculator, moleculeData);
-        randomForestModel = new RandomForestModel(descriptorCalculator, bitVectorDescriptorCalculator, moleculeData);
-        neuralNetworkModel = new NeuralNetworkModel(descriptorCalculator, bitVectorDescriptorCalculator, moleculeData);
+        model = new FastTreePredictionModel(moleculeData);
+        svmModel = new SvmModel(moleculeData);
+        randomForestModel = new RandomForestModel(moleculeData);
+        neuralNetworkModel = new NeuralNetworkModel(moleculeData);
     }
 
     private async Task<IEnumerable<MoleculeData>> provideData(ICcsDataProvider dataProvider)
@@ -94,34 +90,9 @@ public class CcsPredictor
     {
         int index = 0;
 
-        var moleculeDataTasks = molecules.Where(m => m.Adduct == "[M+H]+" || m.Adduct.Contains("H2O")).Select(async m =>
+        var moleculeDataTasks = molecules.Where(moleculeWithCCS => moleculeWithCCS.Adduct == "[M+H]+" || moleculeWithCCS.Adduct.Contains("H2O")).Select(async m =>
         {
-            var descriptors = await descriptorCalculator.CalculateDescriptorsAsync(new Molecule(m.Smiles, m.InChI));
-            var bitVectorDescriptors = await bitVectorDescriptorCalculator.CalculateDescriptorsAsync(new Molecule(m.Smiles, m.InChI));
-            Console.WriteLine($"Nr. {index++} - Adduct: {m.Adduct} CCS: {m.CcsValue} m/z {m.MZ}");
-            return new MoleculeData
-            {
-                HallKierAlpha = descriptors["HallKierAlpha"],
-                Kappa1 = descriptors["Kappa1"],
-                Kappa2 = descriptors["Kappa2"],
-                Kappa3 = descriptors["Kappa3"],
-                Chi0v = descriptors["Chi0v"],
-                Chi1v = descriptors["Chi1v"],
-                Chi2v = descriptors["Chi2v"],
-                Chi3v = descriptors["Chi3v"],
-                TPSA = descriptors["TPSA"],
-                LabuteASA = descriptors["LabuteASA"],
-                MolecularWeight = descriptors["ExactMolWt"],
-                NumHeavyAtoms = descriptors["NumHeavyAtoms"],
-                FractionCSP3 = descriptors["FractionCSP3"],
-                MorganFingerprint = new VBuffer<float>(bitVectorDescriptors["MorganFingerprint"].Count, bitVectorDescriptors["MorganFingerprint"].ToArray()),
-                MACCSFingerprint = new VBuffer<float>(bitVectorDescriptors["MACCSFingerprint"].Count, bitVectorDescriptors["MACCSFingerprint"].ToArray()),
-                //AtomPairFingerprint = new VBuffer<float>(bitVectorDescriptors["AtomPairFingerprint"].Count, bitVectorDescriptors["AtomPairFingerprint"].ToArray()),
-                //TopologicalTorsionFingerprint = new VBuffer<float>(bitVectorDescriptors["TopologicalTorsionFingerprint"].Count, bitVectorDescriptors["TopologicalTorsionFingerprint"].ToArray()),
-
-
-                CcsValue = (float)m.CcsValue
-            };
+            return await DescriptorsCalculator.CalculateDescriptorsAsync(m);
         });
 
         return await Task.WhenAll(moleculeDataTasks);

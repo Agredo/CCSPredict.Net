@@ -11,8 +11,6 @@ namespace CCSPredict.ML.PredictionModels
 
         MLContext mlContext { get; set; }
         ITransformer model { get; set; }
-        CombinedFloatDescriptorCalculator descriptorCalculator { get; set; }
-
 
 
         Task<ModelMetrics> EvaluateAsync();

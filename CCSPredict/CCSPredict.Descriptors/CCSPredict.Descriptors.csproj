@@ -9,8 +9,8 @@
   </PropertyGroup>
 	
 	<ItemGroup>
-	  <PackageReference Include="Indigo.Net" Version="1.20.0" />
-	  <PackageReference Include="RDKitDotNetCore" Version="2024.6.5" />
+	  <PackageReference Include="Indigo.Net" Version="1.26.0" />
+	  <PackageReference Include="RDKitDotNetCore" Version="2025.1.26" />
 	</ItemGroup>
 	
 	<ItemGroup>

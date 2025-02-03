@@ -8,8 +8,8 @@ namespace CCSPredict.ML.PredictionModels;
 
 public class FastTreePredictionModel : PredictionModel
 {
-    public FastTreePredictionModel(CombinedFloatDescriptorCalculator descriptorCalculator, CombinedBitVectorDescriptorCalculator bitVectorDescriptorCalculator, IEnumerable<MoleculeData> moleculeData) 
-        : base(descriptorCalculator, bitVectorDescriptorCalculator, moleculeData)
+    public FastTreePredictionModel(IEnumerable<MoleculeData> moleculeData) 
+        : base( moleculeData)
     {
     }
 

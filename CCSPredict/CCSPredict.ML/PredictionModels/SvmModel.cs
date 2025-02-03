@@ -9,8 +9,8 @@ namespace CCSPredict.ML.PredictionModels;
 
 public class SvmModel : PredictionModel
 {
-    public SvmModel(CombinedFloatDescriptorCalculator descriptorCalculator, CombinedBitVectorDescriptorCalculator bitVectorDescriptorCalculator, IEnumerable<MoleculeData> moleculeData)
-        : base(descriptorCalculator, bitVectorDescriptorCalculator, moleculeData)
+    public SvmModel(IEnumerable<MoleculeData> moleculeData)
+        : base(moleculeData)
     {
 
     }

@@ -9,8 +9,8 @@ namespace CCSPredict.ML.PredictionModels;
 
 public class NeuralNetworkModel : PredictionModel
 {
-    public NeuralNetworkModel(CombinedFloatDescriptorCalculator descriptorCalculator, CombinedBitVectorDescriptorCalculator bitVectorDescriptorCalculator, IEnumerable<MoleculeData> moleculeData)
-        : base(descriptorCalculator, bitVectorDescriptorCalculator, moleculeData)
+    public NeuralNetworkModel(IEnumerable<MoleculeData> moleculeData)
+        : base(moleculeData)
     {
     }
 
