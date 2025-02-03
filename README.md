@@ -10,6 +10,8 @@ CCSPredict.Net leverages the following tools and libraries to provide its functi
 - **.NET 9**: The latest version of the .NET framework, providing improved performance and new features.
 - **ML.NET**: A machine learning framework for .NET that allows for the creation, training, and deployment of machine learning models.
 - **SciSharp STACK**: A collection of libraries for scientific computing in .NET, including NumSharp for numerical operations and TensorFlow.NET for deep learning.
+- **Indigo**: A cheminformatics toolkit for processing chemical structures.
+- **RDKit**: An open-source toolkit for cheminformatics, providing tools for working with chemical informatics, machine learning, and more.
 
 ## Supported Models
 CCSPredict.Net supports the following four models for CCS prediction:
@@ -19,4 +21,12 @@ CCSPredict.Net supports the following four models for CCS prediction:
 3. **Random Forest Model**: An ensemble model that uses multiple decision trees to improve prediction accuracy.
 4. **Neural Network Model**: A complex model that uses layers of interconnected nodes to learn patterns in the data and make predictions.
 
+## Descriptors
+CCSPredict.Net uses the following descriptors for feature extraction and model input:
 
+- **Molecular Weight**: The weight of a molecule based on the sum of the atomic weights of its constituent atoms.
+- **LogP**: The logarithm of the partition coefficient between n-octanol and water, indicating the hydrophobicity of the molecule.
+- **Hydrogen Bond Donors**: The number of hydrogen atoms in a molecule that can form hydrogen bonds.
+- **Hydrogen Bond Acceptors**: The number of atoms in a molecule that can accept hydrogen bonds.
+- **Topological Polar Surface Area (TPSA)**: The surface area of a molecule that is polar, which can affect its ability to permeate cells.
+- **Fingerprints**: A representation of the molecular structure used for similarity searching and other cheminformatics applications.
